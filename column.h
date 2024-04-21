@@ -25,17 +25,24 @@ int count_equal_to(Column *col, int x);
 
 
 typedef enum {
-    NULLVAL = 1, UINT, INT, CHAR, FLOAT, DOUBLE, STRING, STRUCTURE
+    NULLVAL = 1,
+    UINT,
+    INT,
+    CHAR,
+    FLOAT,
+    DOUBLE,
+    STRING,
+    STRUCTURE
 } ENUM_TYPE;
 
 typedef union {
     unsigned int uint_value;
-    signed int int_value;
+    int int_value;
     char char_value;
     float float_value;
     double double_value;
-    char* string_value;
-    void* struct_value;
+    char *string_value;
+    void *struct_value;
 } COL_TYPE;
 
 typedef struct {
@@ -43,7 +50,7 @@ typedef struct {
     unsigned int size;
     unsigned int max_size;
     ENUM_TYPE column_type;
-    COL_TYPE **data;
+    COL_TYPE *data;
     unsigned long long int *index;
 } COLUMN;
 
