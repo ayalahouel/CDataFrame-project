@@ -89,6 +89,14 @@ int count_occurrences(Column *col, int x) {
     return count;
 }
 
+int getValueAtIndex(Column *col, int index) {
+	if (index < 0 || index >= col->logical_size) {
+		fprintf(stderr, "Index out of bounds\n");
+		exit(EXIT_FAILURE);
+}
+	return col->data[index];
+}
+
         }
     }
 
