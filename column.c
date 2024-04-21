@@ -4,6 +4,7 @@
 #include <string.h>
 
 #define REALLOC_SIZE 256
+//part 1
 
 COLUMN *create_column(const char *title) {
     COLUMN *column = (COLUMN *)malloc(sizeof(COLUMN));
@@ -111,5 +112,102 @@ int count_equal_to(Column *col, int x) {
 		}
 }
 return count;
+}
+//part 2
+
+COLUMN *create_column(ENUM_TYPE type, char *title) {
+    COLUMN *column = (COLUMN *)malloc(sizeof(COLUMN));
+    if (column == NULL) {
+        return NULL;
+    }
+
+    column->title = strdup(title);
+    if (column->title == NULL) {
+        free(column);
+        return NULL;
+    }
+
+    column->size = 0;
+    column->max_size = 1;
+    column->column_type = type;
+
+    switch (type) {
+        case INT_TYPE:
+            column->data = calloc(column->max_size, sizeof(int));
+            break;
+        case FLOAT_TYPE:
+            column->data = calloc(column->max_size, sizeof(float));
+            break;
+        case STRING_TYPE:
+            column->data = calloc(column->max_size, sizeof(char *));
+            break;
+        default:
+            free(column->title);
+            free(column);
+            return NULL;
+    }
+
+    if (column->data == NULL) {
+        free(column->title);
+        free(column);
+        return NULL;
+    }
+
+    column->index = NULL;
+    return column;
+}
+
+int insert_value(COLUMN *col, void *value) {
+    if (col->size == col->max_size) {
+        col->max_size += REALLOC_SIZE;
+        COL_TYPE *temp = realloc(col->data, col->max_size * sizeof(COL_TYPE));
+        if (temp == NULL) {
+            return 0;
+        }
+        col->data = temp;
+    }
+
+    switch (col->column_type) {
+        case INT_TYPE:
+            col->data[col->size] = *(int *)value;
+            break;
+        case FLOAT_TYPE:
+            col->data[col->size] = *(float *)value;
+            break;
+        case STRING_TYPE:
+            col->data[col->size] = strdup((char *)value);
+            if (col->data[col->size] == NULL) {
+                return 0;
+            }
+            break;
+        default:
+            return 0;
+    }
+
+    col->size++;
+    return 1;
+}
+
+void delete_column(COLUMN **col) {
+    if (*col == NULL) return;
+
+    free((*col)->title);
+    for (unsigned int i = 0; i < (*col)->size; i++) {
+        switch ((*col)->column_type) {
+            case INT_TYPE:
+                break;
+            case FLOAT_TYPE:
+                break;
+            case STRING_TYPE:
+                free((*col)->data[i]);
+                break;
+            default:
+                break;
+        }
+    }
+    free((*col)->data);
+    free((*col)->index);
+    free(*col);
+    *col = NULL;
 }
 
