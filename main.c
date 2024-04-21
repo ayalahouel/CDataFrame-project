@@ -2,29 +2,38 @@
 #include "column.h"
 
 int main() {
-    
-    COLUMN *ageColumn = create_column("Age");
+    COLUMN *agesColumn = create_column("Ages");
 
-    
-    insert_value(ageColumn, 25);
-    insert_value(ageColumn, 30);
-    insert_value(ageColumn, 35);
+    insert_value(agesColumn, 25);
+    insert_value(agesColumn, 30);
+    insert_value(agesColumn, 35);
 
-    
-    printf("Values in the 'Age' column: ");
-    print_column(ageColumn);
+    printf("Values in the 'Ages' column: ");
+    print_column(agesColumn);
 
-    
-    int countThirty = count_occurrences(ageColumn, 30);
-    printf("Occurrences of value 30 in the 'Age' column: %d\n", countThirty);
+    int countThirty = count_occurrences(agesColumn, 30);
+    printf("Occurrences of value 30 in the 'Ages' column: %d\n", countThirty);
 
-    int valueAtIndexOne = getValueAtIndex(ageColumn, 1);
-    printf("Value at index 1 in the 'Age' column: %d\n", valueAtIndexOne);
+    int valueAtIndexOne = getValueAtIndex(agesColumn, 1);
+    printf("Value at index 1 in the 'Ages' column: %d\n", valueAtIndexOne);
 
-    int countGreaterThan28 = count_greater_than(ageColumn, 28);
-    printf("Number of values greater than 28 in the 'Age' column: %d\n", countGreaterThan28);
+    int countGreaterThan28 = count_greater_than(agesColumn, 28);
+    printf("Number of values greater than 28 in the 'Ages' column: %d\n", countGreaterThan28);
 
-    delete_column(&ageColumn);
+    delete_column(agesColumn);
+
+
+    COLUMN *heightColumn = create_column(FLOAT_TYPE, "Height");
+
+    float heights[] = {1.75, 1.80, 1.65, 1.90};
+    for (int i = 0; i < sizeof(heights) / sizeof(heights[0]); i++) {
+        insert_value(heightColumn, &heights[i]);
+    }
+
+    printf("Values in the 'Height' column: ");
+    print_column(heightColumn);
+
+    delete_column(&heightColumn);
 
     return 0;
 }
