@@ -5,35 +5,17 @@
 
 #define REALLOC_SIZE 256
 
-Column *create_column(char *title) {
-	Column *col = (Column *)malloc(sizeof(Column));
-	if (col == NULL) {
-		fprintf(stderr, "Memory allocation failed\n");
-		exit(EXIT_FAILURE);
-	}
-	strcpy(col->title, title);
-	col->data = NULL;
-	col->physical_size = 0;
-	col->logical_size = 0;
-	return col;
-	}
-	
-	
-	
-	COLUMN *create_column(const char *title) {
+COLUMN *create_column(const char *title) {
     COLUMN *column = (COLUMN *)malloc(sizeof(COLUMN));
     if (column == NULL) {
         return NULL;
     }
-  
-
 
     column->title = strdup(title);
     if (column->title == NULL) {
-		    free(column);
+        free(column);
         return NULL;
     }
-    
 
     column->size = 0;
     column->max_size = 1;
@@ -101,5 +83,33 @@ int getValueAtIndex(Column *col, int index) {
     }
 
     return count;
+}
+int count_greater_than(Column *col, int x) {
+	int count = 0;
+	for (int i = 0; i < col->logical_size; i++) {
+		if (col->data[i] > x) {
+			count++;
+		}
+	}
+return count;
+}
+
+int count_less_than(Column *col, int x) {
+	int count = 0;
+	for (int i = 0; i < col->logical_size; i++) {
+		if (col->data[i] < x) {
+			count++;
+		}
+	}
+return count;
+}
+int count_equal_to(Column *col, int x) {
+	int count = 0;
+	for (int i = 0; i < col->logical_size; i++) {
+		if (col->data[i] == x) {
+			count++;
+		}
+}
+return count;
 }
 
