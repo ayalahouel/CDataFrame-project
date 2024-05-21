@@ -1,6 +1,3 @@
-Sure! Here's the revised README with the output included in the example usage section:
-
----
 
 # CDataFrame: Your Data Analysis Companion
 
@@ -99,5 +96,3 @@ Age of first row: 30
 For detailed documentation, please visit [CDataFrame Wiki](https://github.com/username/CDataFrame/wiki).
 
 ---
-
-This revised version includes the expected output of the example usage, providing a clearer picture of how the library works.
