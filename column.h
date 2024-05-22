@@ -1,28 +1,9 @@
 #ifndef COLUMN_H
 #define COLUMN_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-
-typedef struct {
-    char title[50];
-    int *data;
-    int max_size;
-    int size;
-} Column;
-
-Column *create_column(char *title);
-int insert_value(Column *col, int value);
-void delete_column(Column **col);
-void print_column(Column *col);
-int count_occurrences(Column *col, int x);
-int getValueAtIndex(Column *col, int index);
-int count_greater_than(Column *col, int x);
-int count_less_than(Column *col, int x);
-int count_equal_to(Column *col, int x);
-
-
 
 typedef enum {
     NULLVAL = 1,
@@ -54,10 +35,14 @@ typedef struct {
     unsigned long long int *index;
 } COLUMN;
 
-COLUMN *create_column(ENUM_TYPE type, char *title);
+COLUMN *create_column(ENUM_TYPE type, const char *title);
 int insert_value(COLUMN *col, void *value);
 void delete_column(COLUMN **col);
+void print_column(COLUMN *col);
+int count_occurrences(COLUMN *col, int x);
+int getValueAtIndex(COLUMN *col, int index);
+int count_greater_than(COLUMN *col, int x);
+int count_less_than(COLUMN *col, int x);
+int count_equal_to(COLUMN *col, int x);
 
 #endif /* COLUMN_H */
-
-
