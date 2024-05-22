@@ -4,8 +4,8 @@
 #include <string.h>
 
 #define REALLOC_SIZE 256
-//part 1
-COLUMN *create_column(const char *title) {
+
+COLUMN *create_column(ENUM_TYPE type, const char *title) {
     COLUMN *column = (COLUMN *)malloc(sizeof(COLUMN));
     if (column == NULL) {
         return NULL;
@@ -18,134 +18,10 @@ COLUMN *create_column(const char *title) {
     }
 
     column->size = 0;
-    column->max_size = 1;
-    column->data = calloc(column->max_size, sizeof(int));
-    if (column->data == NULL) {
-        free(column->title);
-        free(column);
-        return NULL;
-    }
-
-    return column;
-}
-
-int insert_value(Column *col, int value) {
-if (col == NULL) {
-fprintf(stderr, "Column is NULL\n");
-return 0;
-}
-int insert_value(COLUMN *column, int value) {
-    if (column->size == column->max_size) {
-        column->max_size *= 2;
-        column->data = realloc(column->data, column->max_size * sizeof(int));
-        if (column->data == NULL) {
-            return 0;
-        }
-    }
-
-    column->data[column->size] = value;
-    column->size++;
-    return 1;
-}
-
-void delete_column(COLUMN *column) {
-    free(column->title);
-    free(column->data);
-    free(column);
-}
-
-void print_column(COLUMN *column) {
-    for (int i = 0; i < column->size; i++) {
-        printf("%d ", column->data[i]);
-    }
-    printf("\n");
-}
-
-int count_occurrences(Column *col, int x) {
-    int count = 0;
-    for (int i = 0; i < col->logical_size; i++) {
-        if (col->data[i] == x) {
-            count++;
-        }
-    }
-    return count;
-}
-
-int getValueAtIndex(Column *col, int index) {
-	if (index < 0 || index >= col->logical_size) {
-		fprintf(stderr, "Index out of bounds\n");
-		exit(EXIT_FAILURE);
-}
-	return col->data[index];
-}
-
-        }
-    }
-
-    return count;
-}
-int count_greater_than(Column *col, int x) {
-	int count = 0;
-	for (int i = 0; i < col->logical_size; i++) {
-		if (col->data[i] > x) {
-			count++;
-		}
-	}
-return count;
-}
-
-int count_less_than(Column *col, int x) {
-	int count = 0;
-	for (int i = 0; i < col->logical_size; i++) {
-		if (col->data[i] < x) {
-			count++;
-		}
-	}
-return count;
-}
-int count_equal_to(Column *col, int x) {
-	int count = 0;
-	for (int i = 0; i < col->logical_size; i++) {
-		if (col->data[i] == x) {
-			count++;
-		}
-}
-return count;
-}
-//part 2
-
-COLUMN *create_column(ENUM_TYPE type, char *title) {
-    COLUMN *column = (COLUMN *)malloc(sizeof(COLUMN));
-    if (column == NULL) {
-        return NULL;
-    }
-
-    column->title = strdup(title);
-    if (column->title == NULL) {
-        free(column);
-        return NULL;
-    }
-
-    column->size = 0;
-    column->max_size = 1;
+    column->max_size = REALLOC_SIZE;
     column->column_type = type;
 
-    switch (type) {
-        case INT_TYPE:
-            column->data = calloc(column->max_size, sizeof(int));
-            break;
-        case FLOAT_TYPE:
-            column->data = calloc(column->max_size, sizeof(float));
-            break;
-        case STRING_TYPE:
-            column->data = calloc(column->max_size, sizeof(char *));
-            break;
-        default:
-            free(column->title);
-            free(column);
-            return NULL;
-    }
-
+    column->data = (COL_TYPE *)calloc(column->max_size, sizeof(COL_TYPE));
     if (column->data == NULL) {
         free(column->title);
         free(column);
@@ -167,15 +43,15 @@ int insert_value(COLUMN *col, void *value) {
     }
 
     switch (col->column_type) {
-        case INT_TYPE:
-            col->data[col->size] = *(int *)value;
+        case INT:
+            col->data[col->size].int_value = *(int *)value;
             break;
-        case FLOAT_TYPE:
-            col->data[col->size] = *(float *)value;
+        case FLOAT:
+            col->data[col->size].float_value = *(float *)value;
             break;
-        case STRING_TYPE:
-            col->data[col->size] = strdup((char *)value);
-            if (col->data[col->size] == NULL) {
+        case STRING:
+            col->data[col->size].string_value = strdup((char *)value);
+            if (col->data[col->size].string_value == NULL) {
                 return 0;
             }
             break;
@@ -192,16 +68,8 @@ void delete_column(COLUMN **col) {
 
     free((*col)->title);
     for (unsigned int i = 0; i < (*col)->size; i++) {
-        switch ((*col)->column_type) {
-            case INT_TYPE:
-                break;
-            case FLOAT_TYPE:
-                break;
-            case STRING_TYPE:
-                free((*col)->data[i]);
-                break;
-            default:
-                break;
+        if ((*col)->column_type == STRING) {
+            free((*col)->data[i].string_value);
         }
     }
     free((*col)->data);
@@ -210,3 +78,69 @@ void delete_column(COLUMN **col) {
     *col = NULL;
 }
 
+void print_column(COLUMN *col) {
+    for (unsigned int i = 0; i < col->size; i++) {
+        switch (col->column_type) {
+            case INT:
+                printf("%d ", col->data[i].int_value);
+                break;
+            case FLOAT:
+                printf("%f ", col->data[i].float_value);
+                break;
+            case STRING:
+                printf("%s ", col->data[i].string_value);
+                break;
+            default:
+                break;
+        }
+    }
+    printf("\n");
+}
+
+int count_occurrences(COLUMN *col, int x) {
+    int count = 0;
+    for (unsigned int i = 0; i < col->size; i++) {
+        if (col->column_type == INT && col->data[i].int_value == x) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int getValueAtIndex(COLUMN *col, int index) {
+    if (index < 0 || index >= col->size) {
+        fprintf(stderr, "Index out of bounds\n");
+        exit(EXIT_FAILURE);
+    }
+    return col->data[index].int_value;
+}
+
+int count_greater_than(COLUMN *col, int x) {
+    int count = 0;
+    for (unsigned int i = 0; i < col->size; i++) {
+        if (col->column_type == INT && col->data[i].int_value > x) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int count_less_than(COLUMN *col, int x) {
+    int count = 0;
+    for (unsigned int i = 0; i < col->size; i++) {
+        if (col->column_type == INT && col->data[i].int_value < x) {
+            count++;
+        }
+    }
+    return count;
+}
+
+int count_equal_to(COLUMN *col, int x) {
+    int count = 0;
+    for (unsigned int i = 0; i < col->size; i++) {
+        if (col->column_type == INT && col->data[i].int_value == x) {
+            count++;
+        }
+    }
+    return count;
+}
