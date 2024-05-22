@@ -5,7 +5,6 @@
 
 #define REALLOC_SIZE 256
 //part 1
-
 COLUMN *create_column(const char *title) {
     COLUMN *column = (COLUMN *)malloc(sizeof(COLUMN));
     if (column == NULL) {
